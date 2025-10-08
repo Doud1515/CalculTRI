@@ -1,0 +1,388 @@
+[21:35, 07/10/2025] Edouard REUDET: <!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Immo Calc - TRI, Cashflow, Rendement</title>
+<style>
+body{margin:0;background:#0f172a;color:#eaf1ff;font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.container{max-width:980px;margin:0 auto;padding:20px}
+.header{display:flex;gap:14px;align-items:center;padding:18px 20px;border-radius:16px;background:linear-gradient(120deg,rgba(91,156,255,.18),rgba(143,123,255,.18));border:1px solid rgba(255,255,255,.08)}
+.logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(120deg,#5b9cff,#8f7bff);color:#fff;font-weight:800}
+.title h1{font-size:20px;margin:0}
+.tit…
+[22:03, 07/10/2025] Edouard REUDET: <!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Immo Calc - IRR/XIRR Aligne Excel</title>
+<style>
+:root{
+  --bg:#0f172a;--card:#141c34;--muted:#8ea3c7;--text:#eaf1ff;
+  --brand:#5b9cff;--brand2:#8f7bff;--ok:#10b981;--warn:#f59e0b;--bad:#ef4444;
+  --b:1px solid rgba(255,255,255,.08);--r:14px;--sh:0 10px 28px rgba(0,0,0,.35)
+}
+@media (prefers-color-scheme: light){
+  :root{--bg:#f6f8fc;--card:#ffffff;--muted:#5c6f90;--text:#0b1220;--sh:0 10px 28px rgba(0,0,0,.08)}
+}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.header{display:flex;gap:12px;align-items:center;padding:16px 18px;border-radius:16px;background:linear-gradient(135deg,rgba(91,156,255,.18),rgba(143,123,255,.18));border:var(--b);box-shadow:var(--sh)}
+.logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-weight:800}
+.title h1{margin:0;font-size:20px}.title p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.grid{display:grid;gap:16px;margin-top:16px;grid-template-columns:repeat(12,1fr)}
+.card{grid-column:span 12;background:var(--card);border:var(--b);border-radius:16px;padding:16px;box-shadow:var(--sh)}
+@media(min-width:960px){.span-4{grid-column:span 4}.span-6{grid-column:span 6}.span-8{grid-column:span 8}}
+.card h2{margin:2px 0 12px;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.row{display:grid;gap:10px}@media(min-width:720px){.row{grid-template-columns:1fr 1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.label{font-size:13px;color:var(--muted)}
+.input{display:flex;align-items:center;gap:6px;border:var(--b);background:rgba(255,255,255,.03);border-radius:12px;padding:2px 10px}
+.input input,.input select{width:100%;border:0;outline:0;background:transparent;color:var(--text);padding:10px 6px;font-size:16px}
+.affix{font-size:12px;color:var(--muted)}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}@media(min-width:960px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{padding:12px;border:var(--b);border-radius:12px;background:rgba(255,255,255,.02)}
+.kpi h3{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.kpi .v{font-weight:800;font-size:18px}.kpi.ok .v{color:var(--ok)}.kpi.warn .v{color:var(--warn)}.kpi.bad .v{color:var(--bad)}
+.btnbar{position:sticky;bottom:0;z-index:9;background:linear-gradient(180deg,transparent,rgba(0,0,0,.08));padding:10px 0;margin-top:6px}
+.btns{display:flex;gap:10px;justify-content:center}
+.btn{border:0;border-radius:14px;padding:13px 18px;font-weight:800;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.btn.secondary{background:transparent;color:var(--text);border:var(--b)}
+.small{font-size:12px;color:var(--muted)}
+.table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:var(--b)}
+.table th,.table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.table th{background:rgba(255,255,255,.04);text-align:left;font-size:12px;color:var(--muted)}
+.footer{opacity:.75;text-align:center;margin:16px 0;color:var(--muted);font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.15);color:var(--ok);border:1px solid rgba(16,185,129,.35);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">IC</div>
+    <div class="title">
+      <h1>Immo Calc - Aligne Excel</h1>
+      <p>IRR (mensuel) ou XIRR (dates), audit des flux, options avancees</p>
+    </div>
+    <span class="badge" style="margin-left:auto">Hors-ligne</span>
+  </div>
+
+  <div class="grid">
+    <section class="card span-6">
+      <h2>Acquisition</h2>
+      <div class="row">
+        <div class="field"><div class="label">Prix d'achat</div><div class="input"><span class="affix">EUR</span><input id="prix" type="number" value="150000" step="1000" min="0"></div></div>
+        <div class="field"><div class="label">Frais de notaire (%)</div><div class="input"><input id="fraisPct" type="number" value="8" step="0.1" min="0"><span class="affix">%</span></div></div>
+      </div>
+      <div class="row">
+        <div class="field"><div class="label">Travaux</div><div class="input"><span class="affix">EUR</span><input id="travaux" type="number" value="10000" step="500" min="0"></div></div>
+        <div class="field"><div class="label">Apport</div><div class="input"><span class="affix">EUR</span><input id="apport" type="number" value="20000" step="500" min="0"></div></div>
+      </div>
+    </section>
+
+    <section class="card span-6">
+      <h2>Financement</h2>
+      <div class="row">
+        <div class="field"><div class="label">Montant emprunte</div><div class="input"><span class="affix">EUR</span><input id="montant" type="number" value="140000" step="1000" min="0"></div></div>
+        <div class="field"><div class="label">Taux nominal annuel</div><div class="input"><input id="taux" type="number" value="3.8" step="0.01" min="0"><span class="affix">%</span></div></div>
+      </div>
+      <div class="row">
+        <div class="field"><div class="label">Duree</div><div class="input"><input id="duree" type="number" value="20" step="1" min="1"><span class="affix">ans</span></div></div>
+        <div class="field"><div class="label">Assurance pret</div><div class="input"><input id="assuPct" type="number" value="0.25" step="0.01" min="0"><span class="affix">%/an</span></div><div class="small">Appliquee au capital emprunte, lisse mensuellement.</div></div>
+      </div>
+    </section>
+
+    <section class="card span-12">
+      <h2>Exploitation</h2>
+      <div class="row">
+        <div class="field"><div class="label">Loyer mensuel</div><div class="input"><span class="affix">EUR</span><input id="loyer" type="number" value="800" step="10" min="0"></div></div>
+        <div class="field"><div class="label">Vacance locative</div><div class="input"><input id="vacancePct" type="number" value="5" step="0.5" min="0"><span class="affix">%</span></div></div>
+      </div>
+      <div class="row">
+        <div class="field"><div class="label">Charges non recup.</div><div class="input"><span class="affix">EUR</span><input id="charges" type="number" value="50" step="5" min="0"></div></div>
+        <div class="field"><div class="label">Taxe fonciere (€/an)</div><div class="input"><span class="affix">EUR</span><input id="fonciere" type="number" value="900" step="50" min="0"></div></div>
+      </div>
+      <div class="row">
+        <div class="field"><div class="label">Gestion / Agence</div><div class="input"><input id="gestionPct" type="number" value="0" step="0.5" min="0"><span class="affix">% loyer</span></div></div>
+        <div class="field"><div class="label">Autres frais (€/mois)</div><div class="input"><span class="affix">EUR</span><input id="autres" type="number" value="0" step="5" min="0"></div></div>
+      </div>
+    </section>
+
+    <section class="card span-12">
+      <h2>Parametres IRR / XIRR</h2>
+      <div class="row">
+        <div class="field">
+          <div class="label">Mode de TRI</div>
+          <div class="input">
+            <select id="modeIrr">
+              <option value="irr">IRR mensuel (periodique)</option>
+              <option value="xirr">XIRR avec dates (mensualise)</option>
+            </select>
+          </div>
+          <div class="small">Choisir IRR si ton Excel utilise TRI sur flux mensuels; XIRR si TRI.PAIEMENTS/IRR avec dates.</div>
+        </div>
+        <div class="field">
+          <div class="label">Date de depart (t0)</div>
+          <div class="input"><input id="date0" type="date"></div>
+          <div class="small">Utilise pour XIRR et pour generer des dates mensuelles.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <div class="label">Outflow initial</div>
+          <div class="input">
+            <select id="outflow">
+              <option value="apport_frais_travaux">Apport + Frais + Travaux (classique)</option>
+              <option value="cout_moins_emprunt">Cout total - Emprunt</option>
+            </select>
+          </div>
+          <div class="small">Aligne-toi sur la convention de ton fichier Excel.</div>
+        </div>
+        <div class="field">
+          <div class="label">Revente en fin d'horizon</div>
+          <div class="input">
+            <select id="revente">
+              <option value="non">Non</option>
+              <option value="oui">Oui (flux final)</option>
+            </select>
+          </div>
+          <div class="small">Si Oui, on ajoute la revente au dernier mois, moins frais et CRD.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field"><div class="label">Valeur de revente (EUR)</div><div class="input"><span class="affix">EUR</span><input id="valRevente" type="number" value="0" step="1000" min="0"></div></div>
+        <div class="field"><div class="label">Frais de vente (%)</div><div class="input"><input id="fraisVentePct" type="number" value="8" step="0.1" min="0"><span class="affix">%</span></div></div>
+      </div>
+      <div class="row">
+        <div class="field"><div class="label">Ded. CRD a la revente</div>
+          <div class="input">
+            <select id="dedCRD">
+              <option value="oui">Oui (soustraire capital restant du)</option>
+              <option value="non">Non</option>
+            </select>
+          </div>
+          <div class="small">Si ton Excel deduit le CRD avec la revente, active "Oui".</div>
+        </div>
+        <div class="field">
+          <div class="label">Mensualites constantes</div>
+          <div class="input">
+            <select id="assuMode">
+              <option value="pourcentage_capital">Assurance = % annuel du capital emprunte</option>
+            </select>
+          </div>
+          <div class="small">Conforme a la version de base. On peut etendre si ton fichier gere d'autres modes.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card span-12" id="resultCard" style="display:none">
+      <h2>Resultats</h2>
+      <div class="kpis" id="kpis"></div>
+      <div class="small" id="notes" style="margin-top:10px"></div>
+    </section>
+
+    <section class="card span-12" id="auditCard" style="display:none">
+      <h2>Audit des flux (envoyes a IRR/XIRR)</h2>
+      <div class="small" style="margin-bottom:8px">Verifie que ces flux reproduisent exactement les flux de ta feuille Excel (onglet Simulateur TRI Projet). Utilise Export CSV pour comparer.</div>
+      <table class="table" id="auditTable">
+        <thead><tr><th>#</th><th>Date</th><th>Flux (EUR)</th><th>Detail</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="btnbar"><div class="btns">
+        <button class="btn secondary" id="btnExport">Exporter CSV</button>
+      </div></div>
+    </section>
+  </div>
+
+  <div class="btnbar">
+    <div class="btns">
+      <button class="btn" id="btnCalc">Calculer</button>
+      <button class="btn secondary" id="btnReset">Reinitialiser</button>
+    </div>
+  </div>
+
+  <div class="footer">Immo Calc - Aligne Excel • v2.0 (ASCII-safe)</div>
+</div>
+
+<script>
+/* ===== Utils / Maths ===== */
+function $(s){return document.querySelector(s);}
+function val(id){var el=document.getElementById(id);return el?(+el.value||0):0;}
+function euro(x){return (isNaN(x)||x===null)?'-':x.toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});}
+function pct(x){return (isNaN(x)||x===null)?'-':(x*100).toFixed(2)+' %';}
+function addMonths(d, m){var nd=new Date(d.getTime()); nd.setMonth(nd.getMonth()+m); return nd;}
+function ymd(d){if(!d) return ''; var y=d.getFullYear(), mo=('0'+(d.getMonth()+1)).slice(-2), da=('0'+d.getDate()).slice(-2); return y+'-'+mo+'-'+da;}
+function pmtt(rate,nper,pv){ if(rate===0) return -(pv/nper); var v=Math.pow(1+rate,nper); return -(pv*rate*v)/(v-1); }
+function irr(flows, guess){ if(guess===undefined) guess=0.1; var x=guess; function npv(r){var s=flows[0]; for(var t=1;t<flows.length;t++) s+=flows[t]/Math.pow(1+r,t); return s;}
+  function dnpv(r){var s=0; for(var t=1;t<flows.length;t++) s+=-t*flows[t]/Math.pow(1+r,t+1); return s;}
+  for(var i=0;i<100;i++){ var f=npv(x), df=dnpv(x); if(Math.abs(f)<1e-7) return x; var step=(df!==0)? f/df : 1e6; var nx=x-step;
+    if(!isFinite(nx)||nx<=-0.9999){ var a=x,b=x+0.05; for(var k=0;k<20;k++){ var fa=npv(a), fb=npv(b), c=b - fb*(b-a)/(fb-fa); if(!isFinite(c)) break; if(Math.abs(npv(c))<1e-7) return c; a=b; b=c; } break; }
+    x=nx; if(Math.abs(step)<1e-7) return x; }
+  return NaN; }
+function xirr(flows, dates, guess){ if(guess===undefined) guess=0.1; var x=guess;
+  var d0=dates[0].getTime();
+  function npv(r){ var s=0; for(var i=0;i<flows.length;i++){ var dt=(dates[i].getTime()-d0)/(1000*60*60*24*365); s+= flows[i]/Math.pow(1+r, dt); } return s; }
+  function dnpv(r){ var s=0; for(var i=0;i<flows.length;i++){ var dt=(dates[i].getTime()-d0)/(1000*60*60*24*365); if(dt===0) continue; s+= -dt*flows[i]/Math.pow(1+r, dt+1); } return s; }
+  for(var it=0; it<100; it++){ var f=npv(x), df=dnpv(x); if(Math.abs(f)<1e-7) return x; var step = (df!==0)? f/df : 1e6; var nx=x-step;
+    if(!isFinite(nx)||nx<=-0.9999){ var a=x,b=x+0.05; for(var k=0;k<30;k++){ var fa=npv(a), fb=npv(b), c=b - fb*(b-a)/(fb-fa); if(!isFinite(c)) break; if(Math.abs(npv(c))<1e-7) return c; a=b; b=c; } break; }
+    x=nx; if(Math.abs(step)<1e-7) return x; }
+  return NaN; }
+
+/* Amortization helpers */
+function paymentAbs(pv, rateMonthly, n){ return Math.abs(pmtt(rateMonthly, n, pv)); }
+function balanceAfter(pv, rateMonthly, n, k){ // balance after k payments (k<=n)
+  var P = paymentAbs(pv, rateMonthly, n);
+  var v = Math.pow(1+rateMonthly, k);
+  // Standard formula: B_k = PV*(1+r)^k - P*((1+r)^k - 1)/r
+  if(rateMonthly===0){ return pv - P*k; }
+  return pv*v - P*((v - 1)/rateMonthly);
+}
+
+/* ===== Core calc ===== */
+function compute(){
+  // Inputs
+  var prix=val('prix'), fraisPct=val('fraisPct')/100, travaux=val('travaux'), apport=val('apport');
+  var montant=val('montant'), tauxAnn=val('taux')/100, dureeAn=val('duree'), assuPct=val('assuPct')/100;
+  var loyer=val('loyer'), vacance=val('vacancePct')/100, charges=val('charges'), fonciere=val('fonciere');
+  var gestionPct=val('gestionPct')/100, autres=val('autres');
+
+  var modeIrr = document.getElementById('modeIrr').value;
+  var outflowMode = document.getElementById('outflow').value;
+  var revente = document.getElementById('revente').value;
+  var valRevente = val('valRevente');
+  var fraisVentePct = val('fraisVentePct')/100;
+  var dedCRD = document.getElementById('dedCRD').value;
+  var date0Str = document.getElementById('date0').value;
+  var date0 = date0Str ? new Date(date0Str) : new Date();
+
+  // Derived
+  var frais = prix*fraisPct;
+  var coutTotal = prix + frais + travaux;
+  var n = Math.max(1, Math.round(dureeAn*12));
+  var rMens = tauxAnn/12;
+  var P = pmtt(rMens, n, montant); // negative
+  var assuMens = -(montant * assuPct / 12); // negative
+  var mensualite = P + assuMens; // negative
+  var mensualiteAbs = Math.abs(mensualite);
+
+  // Exploitation mensuelle
+  var loyerNetVac = loyer*(1-vacance);
+  var gestion = -(loyer*gestionPct);
+  var chargesMens = -charges;
+  var autresMens = -autres;
+  var fonciereMens = -(fonciere/12);
+
+  var cashflowMens = (loyerNetVac + gestion + chargesMens + autresMens + fonciereMens) + mensualite;
+  var cashflowAnn = cashflowMens*12;
+
+  // Outflow initial selon convention
+  var out0 = (outflowMode==='apport_frais_travaux')
+    ? -(apport + frais + travaux)
+    : -(coutTotal - montant);
+
+  // Flux mensuels
+  var flows = [out0], dates = [date0], details = ['t0'];
+  for(var t=1; t<=n; t++){
+    flows.push(cashflowMens);
+    details.push('Cash-flow mois '+t);
+    dates.push(addMonths(date0, t));
+  }
+
+  // Revente en fin d'horizon
+  if(revente==='oui' && valRevente>0){
+    var fraisVente = -(valRevente * fraisVentePct);
+    var crd = 0;
+    if(dedCRD==='oui'){
+      crd = - balanceAfter(montant, rMens, n, n); // negatif: on soustrait
+    }
+    flows[flows.length-1] += (valRevente + fraisVente + crd); // ajoute au dernier flux
+    details[details.length-1] += ' + Revente ('+euro(valRevente)+', frais '+(fraisVentePct*100).toFixed(1)+'%, CRD '+(dedCRD==='oui'?'deduit':'non')+')';
+  }
+
+  // Rendements
+  var rendementBrut = (loyer*12)/coutTotal;
+  var chargesExploitAnn = (gestion*12) + (chargesMens*12) + (autresMens*12) + (fonciere);
+  var revenuNetExploitAnn = (loyerNetVac*12) + chargesExploitAnn;
+  var rendementNet = revenuNetExploitAnn / coutTotal;
+
+  // TRI
+  var triMens = (modeIrr==='irr') ? irr(flows, 0.08) : NaN;
+  var triAnnFromMens = isNaN(triMens)?NaN:(Math.pow(1+triMens,12)-1);
+
+  var triX = (modeIrr==='xirr') ? xirr(flows, dates, 0.08) : NaN; // annuel direct
+  var triAnn = (modeIrr==='irr') ? triAnnFromMens : triX;
+
+  // KPIs
+  var k = [
+    {t:'Cout total', v:euro(coutTotal)},
+    {t:'Mensualite (credit+assu)', v:euro(mensualiteAbs)},
+    {t:'Cash-flow mensuel', v:euro(cashflowMens), c:(cashflowMens>=0?'ok':'bad')},
+    {t:'Cash-flow annuel', v:euro(cashflowAnn), c:(cashflowAnn>=0?'ok':'bad')},
+    {t:'Rendement brut', v:pct(rendementBrut)},
+    {t:'Rendement net (avant impot)', v:pct(rendementNet), c:(isNaN(rendementNet)?'':(rendementNet>=0.04?'ok':(rendementNet>=0.02?'warn':'bad')))},
+    {t:(modeIrr==='irr'?'TRI annuel (de IRR mensuel)':'TRI annuel (XIRR)'), v:(isNaN(triAnn)?'-':pct(triAnn)), c:(isNaN(triAnn)?'':(triAnn>=0.08?'ok':(triAnn>=0.04?'warn':'bad')))},
+    {t:'Vacance consideree', v:(vacance*100).toFixed(1)+' %'}
+  ];
+  var kEl = document.getElementById('kpis'); kEl.innerHTML='';
+  k.forEach(function(it){
+    var d=document.createElement('div'); d.className='kpi'+(it.c?(' '+it.c):'');
+    d.innerHTML='<h3>'+it.t+'</h3><div class="v">'+it.v+'</div>'; kEl.appendChild(d);
+  });
+
+  document.getElementById('notes').innerHTML =
+    'Convention outflow initial: '+(outflowMode==='apport_frais_travaux'?'Apport + Frais + Travaux':'Cout total - Emprunt')+
+    ' • Mode TRI: '+(modeIrr==='irr'?'IRR mensuel (annualise)':'XIRR (dates)')+
+    (revente==='oui'?' • Revente en fin d\'horizon: oui':' • Revente en fin d\'horizon: non');
+
+  document.getElementById('resultCard').style.display='block';
+
+  // Audit table
+  var tb = document.querySelector('#auditTable tbody'); tb.innerHTML='';
+  for(var i=0;i<flows.length;i++){
+    var tr=document.createElement('tr');
+    var lab = (i===0?'t0':('t'+i));
+    tr.innerHTML='<td>'+i+'</td><td>'+ymd(dates[i])+'</td><td>'+euro(flows[i])+'</td><td>'+ (details[i]||lab) +'</td>';
+    tb.appendChild(tr);
+  }
+  document.getElementById('auditCard').style.display='block';
+
+  // Export handler
+  document.getElementById('btnExport').onclick=function(){
+    var lines = ['index,date,flow,detail'];
+    for(var i=0;i<flows.length;i++){
+      lines.push([i, ymd(dates[i]), flows[i], (details[i]||'')].join(','));
+    }
+    var csv = lines.join('\n');
+    var blob = new Blob([csv], {type:'text/csv'});
+    var url = URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url; a.download='flux_irr.csv'; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  };
+
+  // Return values if needed
+  return {flows:flows, dates:dates, triAnn:triAnn};
+}
+
+/* ===== UI wiring ===== */
+function resetDefaults(){
+  var s={prix:150000,fraisPct:8,travaux:10000,apport:20000,montant:140000,taux:3.8,duree:20,assuPct:0.25,
+         loyer:800,vacancePct:5,charges:50,fonciere:900,gestionPct:0,autres:0};
+  Object.keys(s).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=s[id]; });
+  document.getElementById('modeIrr').value='irr';
+  document.getElementById('outflow').value='apport_frais_travaux';
+  document.getElementById('revente').value='non';
+  document.getElementById('valRevente').value=0;
+  document.getElementById('fraisVentePct').value=8;
+  document.getElementById('dedCRD').value='oui';
+  var today=new Date(); var y=today.getFullYear(), m=('0'+(today.getMonth()+1)).slice(-2), d=('0'+today.getDate()).slice(-2);
+  document.getElementById('date0').value = y+'-'+m+'-'+d;
+  document.getElementById('resultCard').style.display='none';
+  document.getElementById('auditCard').style.display='none';
+}
+document.getElementById('btnCalc').addEventListener('click', compute);
+document.getElementById('btnReset').addEventListener('click', resetDefaults);
+window.addEventListener('load', function(){ resetDefaults(); compute(); });
+</script>
+</body>
+</html>
